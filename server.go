@@ -1,11 +1,13 @@
 package teleport
 
 import (
-	"encoding/json"
-	"github.com/henrylee2cn/teleport/debug"
+	"bytes"
+	"encoding/gob"
 	"log"
 	"net"
 	"time"
+
+	"github.com/henrylee2cn/teleport/debug"
 )
 
 // 服务器专有成员
@@ -94,7 +96,8 @@ func (self *TP) sInitConn(conn *Connect, remoteAddr string) (nodeuid string, usa
 		debug.Println("Debug: 收到数据-第1批-解码前: ", string(data))
 
 		d := new(NetData)
-		json.Unmarshal(data, d)
+		decoder := gob.NewDecoder(bytes.NewReader(data))
+		decoder.Decode(&d)
 		// 修复缺失请求方地址的请求
 		if d.From == "" {
 			d.From = remoteAddr // 或可为：strings.Split(remoteAddr, ":")[0]

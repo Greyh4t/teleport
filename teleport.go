@@ -2,10 +2,12 @@
 package teleport
 
 import (
-	"encoding/json"
-	"github.com/henrylee2cn/teleport/debug"
+	"bytes"
+	"encoding/gob"
 	"log"
 	"time"
+
+	"github.com/henrylee2cn/teleport/debug"
 )
 
 // mode
@@ -306,11 +308,13 @@ func (self *TP) closeMsg(uid, addr string, short bool) {
 
 // 通信数据编码与发送
 func (self *TP) send(data *NetData) {
+	var d bytes.Buffer
 	if data.From == "" {
 		data.From = self.uid
 	}
 
-	d, err := json.Marshal(*data)
+	encoder := gob.NewEncoder(&d)
+	err := encoder.Encode(*data)
 	if err != nil {
 		debug.Println("Debug: 发送数据-编码出错", err)
 		return
@@ -321,7 +325,7 @@ func (self *TP) send(data *NetData) {
 		return
 	}
 	// 封包
-	end := self.Packet(d)
+	end := self.Packet(d.Bytes())
 	// 发送
 	conn.Write(end)
 	debug.Printf("Debug: 发送数据-成功: %+v", data)
@@ -338,7 +342,8 @@ func (self *TP) save(conn *Connect) {
 		debug.Printf("Debug: 收到数据-解码前: %v", string(data))
 
 		d := new(NetData)
-		err := json.Unmarshal(data, d)
+		decoder := gob.NewDecoder(bytes.NewReader(data))
+		err := decoder.Decode(&d)
 		if err == nil {
 			// 修复缺失请求方地址的请求
 			if d.From == "" {
