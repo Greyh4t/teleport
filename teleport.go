@@ -314,7 +314,7 @@ func (self *TP) send(data *NetData) {
 	}
 
 	encoder := gob.NewEncoder(&d)
-	err := encoder.Encode(*data)
+	err := encoder.Encode(data)
 	if err != nil {
 		debug.Println("Debug: 发送数据-编码出错", err)
 		return
