@@ -121,6 +121,9 @@ func (self *TP) sInitConn(conn *Connect, remoteAddr string) (nodeuid string, usa
 				conn.Short = true
 			} else {
 				log.Printf(" *     —— 客户端 %v (%v) 连接成功 ——", nodeuid, remoteAddr)
+				if self.OnConnect != nil {
+					defer self.OnConnect(nodeuid)
+				}
 			}
 
 			// 标记连接已经正式生效可用

@@ -67,6 +67,11 @@ type Teleport interface {
 	GetMode() int
 	// 返回当前有效连接节点数
 	CountNodes() int
+
+	// 连接建立时的回调函数
+	SetOnConnect(func(string)) Teleport
+	// 连接关闭时的回调函数
+	SetOnClose(func(string)) Teleport
 }
 
 type TP struct {
@@ -96,6 +101,11 @@ type TP struct {
 	*tpServer
 	// 客户端模式专有成员
 	*tpClient
+
+	// 连接关闭时的回调函数
+	OnClose func(string)
+	// 连接建立时的回调函数
+	OnConnect func(string)
 }
 
 // 每个API方法需判断status状态，并做相应处理
@@ -136,6 +146,16 @@ func (self *TP) SetUID(mine string, server ...string) Teleport {
 // 指定应用程序API
 func (self *TP) SetAPI(api API) Teleport {
 	self.api = api
+	return self
+}
+
+func (self *TP) SetOnClose(onClose func(string)) Teleport {
+	self.OnClose = onClose
+	return self
+}
+
+func (self *TP) SetOnConnect(onConnect func(string)) Teleport {
+	self.OnConnect = onConnect
 	return self
 }
 
@@ -303,6 +323,9 @@ func (self *TP) closeMsg(uid, addr string, short bool) {
 		log.Printf(" *     —— 与客户端 %v (%v) 断开连接！——", uid, addr)
 	case CLIENT:
 		log.Printf(" *     —— 与服务器 %v 断开连接！——", addr)
+	}
+	if self.OnClose != nil {
+		self.OnClose(uid)
 	}
 }
 

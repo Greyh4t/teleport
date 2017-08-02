@@ -1,10 +1,11 @@
 package teleport
 
 import (
-	"github.com/henrylee2cn/teleport/debug"
 	"log"
 	"net"
 	"time"
+
+	"github.com/henrylee2cn/teleport/debug"
 )
 
 // 客户端专有成员
@@ -97,6 +98,9 @@ func (self *TP) cGoConn(conn net.Conn) {
 	if !self.short {
 		self.send(NewNetData(self.uid, self.tpClient.serverUID, IDENTITY, "", nil))
 		log.Printf(" *     —— 成功连接到服务器：%v ——", remoteAddr)
+		if self.OnConnect != nil {
+			defer self.OnConnect(self.tpClient.serverUID)
+		}
 	} else {
 		connect.Short = true
 	}
