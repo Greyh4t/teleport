@@ -7,7 +7,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/henrylee2cn/teleport/debug"
+	"github.com/Greyh4t/teleport/debug"
 )
 
 // 服务器专有成员
