@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/henrylee2cn/teleport"
-	"github.com/henrylee2cn/teleport/debug"
+	"github.com/Greyh4t/teleport"
+	"github.com/Greyh4t/teleport/debug"
 	// "log"
 	// "time"
 )

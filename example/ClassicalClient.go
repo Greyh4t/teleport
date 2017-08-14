@@ -2,7 +2,7 @@ package models
 
 import (
 	"fmt"
-	"github.com/henrylee2cn/teleport"
+	"github.com/Greyh4t/teleport"
 	"log"
 	"sync"
 	"time"
