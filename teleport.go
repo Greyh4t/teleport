@@ -7,7 +7,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/henrylee2cn/teleport/debug"
+	"github.com/Greyh4t/teleport/debug"
 )
 
 // mode
