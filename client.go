@@ -5,7 +5,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/henrylee2cn/teleport/debug"
+	"github.com/Greyh4t/teleport/debug"
 )
 
 // 客户端专有成员
